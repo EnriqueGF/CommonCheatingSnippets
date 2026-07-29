@@ -179,13 +179,17 @@ struct Pattern
 			}
 		}
 #endif
+		if (patternSize == 0 || patternSize > dwLength) {
+			return NULL;
+		}
 
 #ifndef _KERNEL_MODE
 #ifdef CHECK_VALID_MEMORY
 		auto vCheck = isMemoryValid((void*)dwStart, patternSize);
 #endif
 #endif
-		for (DWORD64 i = 0; i < dwLength; i++) {
+		const size_t lastPossibleStart = dwLength - patternSize;
+		for (DWORD64 i = 0; i <= lastPossibleStart; i++) {
 			UINT8* lpCurrentByte = (UINT8*)(dwStart + i);
 #ifndef _KERNEL_MODE
 #ifdef CHECK_VALID_MEMORY
